@@ -9,6 +9,8 @@ export const envSchema = z.object({
   DB_PASSWORD: z.string(),
   DB_DATABASE: z.string(),
   DB_USERNAME: z.string(),
+  JWT_SECRET: z.string(),
+  JWT_EXPIRATION: z.string(),
 });
 
 export function validateEnv(config: Record<string, unknown>) {

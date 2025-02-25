@@ -5,6 +5,7 @@ import { AutheController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { JwtModule } from "@nestjs/jwt";
 import { env } from "src/env";
+import { UserModule } from "../users/user.module";
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), JwtModule.register({
@@ -12,8 +13,8 @@ import { env } from "src/env";
     secret: env.JWT_SECRET,
     signOptions: {
       expiresIn: env.JWT_EXPIRATION
-    }
-  })],
+    },
+  }), UserModule],
   controllers: [AutheController],
   providers: [AuthService],
 })

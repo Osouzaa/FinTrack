@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Category } from './catergories.entity';
+import { Category } from './categories.entity';
 import { User } from './user.entity';
 
 @Entity('expenses')
@@ -9,29 +9,29 @@ export class Expense {
   id: string;
 
   @Column()
-  amount: number; // Valor total da despesa
+  amount: number; 
 
   @Column({ type: 'date' })
-  date: Date; // Data em que a despesa foi realizada
+  date: Date; 
 
   @Column({ default: false })
-  isInstallment: boolean; // Indica se a despesa foi parcelada
+  isInstallment: boolean; 
 
   @Column({ nullable: true })
-  installmentCount: number; // Quantidade de parcelas, se for parcelado
+  installmentCount: number; 
 
   @Column({ nullable: true })
   installmentValue: number; // Valor de cada parcela, se for parcelado
 
   @ManyToOne(() => Category, (category) => category.expenses)
   @JoinColumn({ name: 'category_id' })
-  category: Category; // Relacionamento com a categoria
+  category: Category; 
 
   @ManyToOne(() => User, (user) => user.expenses)
   @JoinColumn({ name: 'user_id' })
-  user: User; // Relacionamento com o usuário
+  user: User; 
 
   @CreateDateColumn()
-  createdAt: Date; // Data de criação do registro
+  createdAt: Date; 
 
 }

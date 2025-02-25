@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { User } from "./entities/user.entity";
 import { Expense } from "./entities/expenses.entity";
-import { Category } from "./entities/catergories.entity";
+import { Category } from "./entities/categories.entity";
 
 @Module({
   imports: [

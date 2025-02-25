@@ -8,7 +8,7 @@ export class Category {
   id: string;
 
   @Column()
-  name: string; // Nome da categoria (Alimentação, Transporte, Lazer, etc.)
+  name: string;
 
   @OneToMany(() => Expense, (expense) => expense.category)
   expenses: Expense[];

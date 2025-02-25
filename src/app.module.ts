@@ -1,9 +1,11 @@
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './env';
 import { DatabaseModule } from './db/db.config';
 import { UserModule } from './entities/users/user.module';
 import { AuthModule } from './entities/auth/auth.module';
+import { ExpensesModule } from './entities/expenses/expenses.module';
 
 @Module({
   imports: [
@@ -13,7 +15,8 @@ import { AuthModule } from './entities/auth/auth.module';
     }),
     DatabaseModule,
     UserModule,
-    AuthModule
+    AuthModule,
+    ExpensesModule
   ],
   controllers: [],
   providers: [],

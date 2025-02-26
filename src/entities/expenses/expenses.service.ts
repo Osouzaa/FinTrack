@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatedExpenseDto } from './dto/create.expense.dto';
 import { Repository, type FindOptionsWhere } from 'typeorm';
 import { Expense } from 'src/db/entities/expenses.entity';
@@ -22,20 +22,35 @@ export class ExpensesService {
     const category = await this.categoriesRepository.findOne({
       where: { id: createExpenseDto.categoryId },
     });
-
+  
     if (!category) {
       throw new NotFoundException('Category not found');
     }
-
+  
+    // Calculando o total das despesas atuais da categoria
+    const totalExpenses = category.expenses.reduce((total, expense) => total + expense.amount, 0);
+    const newTotalExpenses = totalExpenses + createExpenseDto.amount;
+  
+    // Criando a nova despesa e associando a categoria e o usuário
     const expense = this.expensesRepository.create({
       ...createExpenseDto,
-      category, // Associa a categoria corretamente
+      category,
       user: { id: user.sub } as User,
     });
-
+  
     await this.expensesRepository.save(expense);
-    return expense;
+  
+    // Verificando se ultrapassou o limite
+    const isOverLimit = newTotalExpenses > category.limitMonth;
+  
+    return {
+      expense,
+      message: isOverLimit
+        ? `Warning: The total expenses for this category have exceeded the limit of ${category.limitMonth} reais.`
+        : 'Expense registered successfully.',
+    };
   }
+  
 
   async findAll(query: QueryExpenseDto, user: CurrentUserProps) {
     const { amount, categoryId, date, installmentCount, installmentValue, isInstallment, limit, page } = query;

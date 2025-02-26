@@ -10,6 +10,9 @@ export class Category {
   @Column()
   name: string;
 
+  @Column({nullable: true})
+  limitMonth: number
+
   @ManyToOne(() => User, (user) => user.categories, { onDelete: "CASCADE" })
   user: User;
 

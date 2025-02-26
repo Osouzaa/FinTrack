@@ -17,9 +17,9 @@ export class CategoriesController {
  
   @Get()
   findAll(
-    @Query('page') page: number = 1,      // Padrão para página 1
-    @Query('limit') limit: number = 10,    // Padrão para limite de 10
-    @Query('nameFilter') nameFilter: string = ''  // Filtro por nome (padrão vazio)
+    @Query('page') page: number = 1,      
+    @Query('limit') limit: number = 10,    
+    @Query('nameFilter') nameFilter: string = ''  
   ) {
     return this.categoriesService.findAll(page, limit, nameFilter);
   }

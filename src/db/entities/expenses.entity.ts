@@ -11,8 +11,8 @@ export class Expense {
   @Column()
   amount: number; 
 
-  @Column({ type: 'date' })
-  date: Date; 
+  @Column()
+  date: string; 
 
   @Column({ default: false })
   isInstallment: boolean; 

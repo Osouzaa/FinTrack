@@ -3,6 +3,7 @@ import { CreateCategoryDto } from './dto/create.category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/db/entities/categories.entity';
 import { Repository } from 'typeorm';
+import type { CurrentUserProps } from 'src/decorators/currentUser.decorator';
 
 @Injectable()
 export class CategoriesService {
@@ -10,51 +11,81 @@ export class CategoriesService {
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>
   ) {}
+
+  // Método para criar uma categoria
   async create(createCategoryDto: CreateCategoryDto) {
-    const category = await this.findBYCategory(createCategoryDto.name)
+    const category = await this.findByCategory(createCategoryDto.name);
 
     if (category) {
       throw new ConflictException('Category already exists.');
     }
 
     const newCategory = this.categoryRepository.create(createCategoryDto);
-
     await this.categoryRepository.save(newCategory);
   }
 
-  findBYCategory(name: string) {
-    const categoryName = this.categoryRepository.findOne({ where: { name } });
-
-    return categoryName
+  async findByCategory(name: string) {
+    const category = await this.categoryRepository.findOne({ where: { name } });
+    return category;
   }
 
-  async findAll() {
-    return this.categoryRepository.find();
+  async findAll(
+    page: number = 1, 
+    limit: number = 10, 
+    nameFilter: string = ''
+  ) {
+    const queryBuilder = this.categoryRepository.createQueryBuilder('category');
+  
+    if (nameFilter) {
+      queryBuilder.where('category.name LIKE :name', { name: `%${nameFilter}%` });
+    }
+  
+    queryBuilder.skip((page - 1) * limit).take(limit);
+  
+    // Executa a consulta
+    const [categories, total] = await queryBuilder.getManyAndCount();
+  
+    return {
+      data: categories,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
+  
 
-  async findOne(id: string) {
+  async findOne(id: string, user: CurrentUserProps) {
     const category = await this.categoryRepository.findOne({
-      where: { id },
+      where: { id, user: { id: user.sub } },
       relations: ['expenses', 'expenses.user'],
     });
-  
+
     if (!category) {
       throw new NotFoundException('Category not found.');
     }
-  
+
     const totalDespensas = category.expenses.reduce((total, expense) => {
       return total + expense.amount; // Somando o valor das despesas
     }, 0);
-  
+
     return {
       category,
       totalDespensas,
     };
   }
-  
 
+  // Método para remover uma categoria
+  async remove(id: string, user: CurrentUserProps) {
+    const category = await this.categoryRepository.findOne({
+      where: { id, user: { id: user.sub } },
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+    if (!category) {
+      throw new NotFoundException('Category not found.');
+    }
+
+    await this.categoryRepository.remove(category);
+   
   }
 }

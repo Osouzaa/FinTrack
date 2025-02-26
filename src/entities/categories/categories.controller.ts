@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto, createCategorySchema } from './dto/create.category.dto';
-import { UpdateCategoryDto } from './dto/update.category.dto';
 import { ZodValidationPipe } from 'src/pipes/zod.validation';
 
 @Controller('categories')
@@ -22,11 +21,6 @@ export class CategoriesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.categoriesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return this.categoriesService.update(+id, updateCategoryDto);
   }
 
   @Delete(':id')

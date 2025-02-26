@@ -6,6 +6,7 @@ import { DatabaseModule } from './db/db.config';
 import { UserModule } from './entities/users/user.module';
 import { AuthModule } from './entities/auth/auth.module';
 import { ExpensesModule } from './entities/expenses/expenses.module';
+import { CategoriesModule } from './entities/categories/categories.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ExpensesModule } from './entities/expenses/expenses.module';
     DatabaseModule,
     UserModule,
     AuthModule,
-    ExpensesModule
+    ExpensesModule,
+    CategoriesModule
   ],
   controllers: [],
   providers: [],

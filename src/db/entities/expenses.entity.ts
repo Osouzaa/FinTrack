@@ -21,7 +21,7 @@ export class Expense {
   installmentCount: number; 
 
   @Column({ nullable: true })
-  installmentValue: number; // Valor de cada parcela, se for parcelado
+  installmentValue: number; 
 
   @ManyToOne(() => Category, (category) => category.expenses)
   @JoinColumn({ name: 'category_id' })
@@ -29,7 +29,7 @@ export class Expense {
 
   @ManyToOne(() => User, (user) => user.expenses)
   @JoinColumn({ name: 'user_id' })
-  user: User; 
+  user: User;
 
   @CreateDateColumn()
   createdAt: Date; 

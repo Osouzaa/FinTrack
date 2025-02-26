@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createExpenseSchema = z.object({
-  amount: z.preprocess((val) => Number(val), z.number()),  // Assegura que 'amount' será convertido para número
+  amount:  z.number(), 
   date: z.string(),
   isInstallment: z.boolean(),
   installmentCount: z.number().optional(),

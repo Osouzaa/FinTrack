@@ -12,7 +12,7 @@ import { UserModule } from "../users/user.module";
     global: true,
     secret: env.JWT_SECRET,
     signOptions: {
-      expiresIn: env.JWT_EXPIRATION
+      expiresIn: '7d'
     },
   }), UserModule],
   controllers: [AutheController],

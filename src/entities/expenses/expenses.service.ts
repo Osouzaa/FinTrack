@@ -3,6 +3,9 @@ import  { CreatedExpenseDto } from './dto/create.expense.dto';
 import  { Repository } from 'typeorm';
 import  { Expense } from 'src/db/entities/expenses.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import  { Category } from 'src/db/entities/categories.entity';
+import  { User } from 'src/db/entities/user.entity';
+import  { CurrentUserProps } from 'src/decorators/currentUser.decorator';
 
 @Injectable()
 export class ExpensesService {
@@ -12,12 +15,15 @@ export class ExpensesService {
   ) {
 
   }
-  async create(createExpenseDto: CreatedExpenseDto, user:any ) {
-    const expense =  this.expensesRepository.create({...createExpenseDto, user: user.sub})
-    
-    await this.expensesRepository.save(expense)
-
-    return expense
+  async create(createExpenseDto: CreatedExpenseDto, user: CurrentUserProps) {
+    const expense = this.expensesRepository.create({
+      ...createExpenseDto,
+      category: { id: createExpenseDto.categoryId } as Category, 
+      user: { id: user.sub } as User, 
+    });
+  
+    await this.expensesRepository.save(expense);
+    return expense;
   }
 
   findAll() {

@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create.category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/db/entities/categories.entity';
@@ -32,9 +32,26 @@ export class CategoriesService {
     return this.categoryRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string) {
+    const category = await this.categoryRepository.findOne({
+      where: { id },
+      relations: ['expenses', 'expenses.user'],
+    });
+  
+    if (!category) {
+      throw new NotFoundException('Category not found.');
+    }
+  
+    const totalDespensas = category.expenses.reduce((total, expense) => {
+      return total + expense.amount; // Somando o valor das despesas
+    }, 0);
+  
+    return {
+      category,
+      totalDespensas,
+    };
   }
+  
 
 
   remove(id: number) {
